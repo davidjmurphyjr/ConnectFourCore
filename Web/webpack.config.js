@@ -4,19 +4,19 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-    entry: "./src/index.ts",
+    entry: "./src/index.tsx",
     output: {
         path: path.resolve(__dirname, "wwwroot"),
         filename: "[name].[chunkhash].js",
         publicPath: "/"
     },
     resolve: {
-        extensions: [".js", ".ts"]
+        extensions: [".ts", ".tsx", ".js", ".json"]
     },
     module: {
         rules: [
             {
-                test: /\.ts$/,
+                test: /\.tsx$/,
                 use: "ts-loader"
             },
             {

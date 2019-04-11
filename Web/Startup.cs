@@ -17,6 +17,7 @@ namespace Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,6 +34,7 @@ namespace Web
             {
                 options.MapHub<GameHub>("/hub");
             });
+            app.UseMvc(routes => routes.MapRoute("Default", "{*url}", new { controller = "Default", action = "Index" }));
         }
     }
 }
