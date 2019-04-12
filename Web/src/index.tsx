@@ -3,7 +3,7 @@ import * as signalR from "@aspnet/signalr";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { Hello } from "./Hello";
+import { Board as Hello } from "./Board";
 
 var re = /\[([a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12})\]/i;
 function extractGuid(value) {    
@@ -27,23 +27,20 @@ function extractGuid(value) {
             .withUrl("/hub")
             .build();
 
+        connection.on("gameCreated", (board: any) => {
+            ReactDOM.render(
+                <Hello board={board} />,
+                document.getElementById("example")
+            );
+        });
+
         connection.on("gameCreated", (username: string, gameId: string) => {
             history.pushState(null, null, gameId);
         });
 
-        await connection.start()
-        if (window.location.pathname === "/") {
-            connection.send("newGame", username, "fooo")
-        } else if(extractGuid(window.location.pathname)) {
-
-        } else {
-            // todo: default route handling
-        }
-
-        ReactDOM.render(
-            <Hello compiler="TypeScript" framework="React" />,
-            document.getElementById("example")
-        );
+        await connection.start();
+        connection.send("newGame", username, "fooo")
+       
     } catch (e) {
         document.write(e)
     }

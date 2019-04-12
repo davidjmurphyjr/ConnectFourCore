@@ -2,43 +2,27 @@ namespace Core
 {
     public class Board
     {
-        public const int NumberOfColumns = 7;
+        private const int NumberOfColumns = 7;
 
-        private readonly Column[] columns;
-
-        public Token?[][] Rows
-        {
-            get
-            {
-                var rows = new Token?[Core.Column.NumberOfRows][];
-                for(int rowNumber = 0; rowNumber < rows.Length; rowNumber++){
-                   Token?[] row = new Token?[NumberOfColumns];
-                    for(int columnNumber = 0; columnNumber < NumberOfColumns; columnNumber++){
-                        row[columnNumber] = Column(columnNumber).Row(rowNumber);
-                    }
-                    rows[rowNumber] = row;
-                } 
-                return rows;
-            }
-        }
+        private readonly Column[] _columns;
 
         public Board()
         {
-            columns = new Column[NumberOfColumns];
-            for (int i = 0; i < columns.Length; i++)
+            _columns = new Column[NumberOfColumns];
+            for (var i = 0; i < _columns.Length; i++)
             {
-                columns[i] = new Column();
+                _columns[i] = new Column();
             }
         }
 
         public Column Column(int columnNumber)
         {
-            return columns[columnNumber];
+            return _columns[columnNumber];
         }
 
         private bool CheckForConnectionAt(int columnNumber, int rowNumber, Orientation orientation)
         {
-            Token sequenceColor = Column(columnNumber).Row(rowNumber).Value;
+            var sequenceColor = Column(columnNumber).Row(rowNumber).Value;
             var connected = 1;
             var colToCheck = columnNumber;
             var rowToCheck = rowNumber;
@@ -50,7 +34,7 @@ namespace Core
                 case Orientation.Horizontal:
                     colDelta = 1;
                     break;
-                case Orientation.Virtical:
+                case Orientation.Vertical:
                     rowDelta = 1;
                     break;
                 case Orientation.DiagonalUp:
@@ -96,7 +80,7 @@ namespace Core
 
         public bool HasConnectionAt(int columnNumber, int rowNumber)
         {
-            return CheckForConnectionAt(columnNumber, rowNumber, Orientation.Virtical)
+            return CheckForConnectionAt(columnNumber, rowNumber, Orientation.Vertical)
             || CheckForConnectionAt(columnNumber, rowNumber, Orientation.Horizontal)
             || CheckForConnectionAt(columnNumber, rowNumber, Orientation.DiagonalUp)
             || CheckForConnectionAt(columnNumber, rowNumber, Orientation.DiagonalDown);
@@ -106,7 +90,7 @@ namespace Core
     public enum Orientation
     {
         Horizontal,
-        Virtical,
+        Vertical,
         DiagonalUp,
         DiagonalDown
     }

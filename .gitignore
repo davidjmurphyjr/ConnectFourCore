@@ -2,3 +2,5 @@ node_modules
 bin
 obj
 wwwroot
+.idea
+ConnectFourCore.sln.DotSettings.user

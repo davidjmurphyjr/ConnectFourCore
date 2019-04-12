@@ -1,14 +1,17 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using System;
 using System.Threading.Tasks;
-using System;
+using Core;
+using Microsoft.AspNetCore.SignalR;
 
-namespace SignalRWebPack.Hubs
+namespace Web.Hubs
 {
     public class GameHub : Hub
     {
          public async Task NewGame(string username, string message)
         {
-            await Clients.All.SendAsync("gameCreated", username, Guid.NewGuid().ToString());
+            Guid gameId = Guid.NewGuid();
+            var game = new Game();
+            await Clients.All.SendAsync("gameCreated", game.Board);
         }
     }
 }
