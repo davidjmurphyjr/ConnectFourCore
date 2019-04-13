@@ -2,6 +2,8 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const webpack = require("webpack");
+const autoprefixer = require("autoprefixer");
 
 module.exports = {
     entry: "./src/index.tsx",
@@ -22,7 +24,7 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: [MiniCssExtractPlugin.loader, "css-loader"]
+                use: [MiniCssExtractPlugin.loader, "css-loader", "postcss-loader"]
             },
             {
                 enforce: "pre",
@@ -38,6 +40,13 @@ module.exports = {
         }),
         new MiniCssExtractPlugin({
             filename: "css/[name].[chunkhash].css"
+        }),
+        new webpack.LoaderOptionsPlugin({
+            options: {
+                postcss: [
+                    autoprefixer()
+                ]
+            }
         })
     ]
 };
