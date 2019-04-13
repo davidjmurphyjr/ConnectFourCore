@@ -1,4 +1,4 @@
-import "./css/main.css";
+import "./index.css";
 import * as signalR from "@aspnet/signalr";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -30,7 +30,7 @@ function extractGuid(value) {
         connection.on("gameCreated", (board: any) => {
             ReactDOM.render(
                 <Hello board={board} />,
-                document.getElementById("example")
+                document.getElementById("react-root")
             );
         });
 

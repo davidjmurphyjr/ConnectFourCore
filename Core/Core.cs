@@ -4,7 +4,7 @@ namespace Core
 {
     public enum Token
     {
-        Black,
+        Yellow,
         Red
     }
 

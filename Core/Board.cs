@@ -4,20 +4,20 @@ namespace Core
     {
         private const int NumberOfColumns = 7;
 
-        private readonly Column[] _columns;
+        public Column[] Columns { get; }
 
         public Board()
         {
-            _columns = new Column[NumberOfColumns];
-            for (var i = 0; i < _columns.Length; i++)
+            Columns = new Column[NumberOfColumns];
+            for (var i = 0; i < Columns.Length; i++)
             {
-                _columns[i] = new Column();
+                Columns[i] = new Column();
             }
         }
 
         public Column Column(int columnNumber)
         {
-            return _columns[columnNumber];
+            return Columns[columnNumber];
         }
 
         private bool CheckForConnectionAt(int columnNumber, int rowNumber, Orientation orientation)

@@ -1,3 +1,4 @@
+import "./Board.css";
 import * as React from "react";
 
 export interface BoardProps { board: any; }
@@ -7,15 +8,21 @@ export interface BoardProps { board: any; }
 export class Board extends React.Component<BoardProps, {}> {
     render() {
         return (
-            this.props.board.rows.map(row => {
-                return (
-                    <div>
-                        {row.map(space => {
-                            return <div>space: {space}</div>;
-                        })}
-                    </div>
-                );
-            })
+            <div className="board">
+                {this.props.board.columns.map(column => {
+                    return (
+                        <div className="column">
+                            {column.tokens.map(token => {
+                                return (
+                                    <div className="space">
+                                        {token}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    );
+                })}
+            </div>
         );
     }
 }
