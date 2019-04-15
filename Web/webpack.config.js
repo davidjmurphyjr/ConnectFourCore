@@ -26,13 +26,10 @@ module.exports = {
                     MiniCssExtractPlugin.loader, 
                     "css-loader",
                     {
-                        loader: "postcss-loader",
-                        options: {
-                            ident: "postcss",
-                            plugins: [
-                                require("postcss-nested")(),
-                                require("autoprefixer")()
-                            ]
+                        loader: "postcss-loader", 
+                        options: { 
+                            ident: "postcss", 
+                            plugins: [ require("postcss-nested")(),  require("autoprefixer")()] 
                         }
                     }
                 ]

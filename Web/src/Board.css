@@ -1,15 +1,53 @@
-.board {
-    background-color: #007eff;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    user-select: none;
+:root {
+    --blue: #007EFF;
+    --light-blue: rgb(0, 187, 255);
+}
 
-    .column .space {
-        margin: 10px 5px;
-        width: 50px;
-        height: 50px;
-        background-color: aliceblue;
+.board {
+    padding: 20px;
+    display: flex;
+    justify-content: stretch;
+
+    @media (orientation: landscape) {
+        width: 100vh;
+    }
+
+    @media (orientation: portrait) {
+        height: 100vw;
+        width: 100%;
+    }
     
+    .column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+
+        .staging {
+            fill: transparent;
+        }
+        
+        &:hover {
+            .staging {
+                fill: black;
+            }
+        }
+
+        .space {
+            stroke: black;
+            stroke-width: 2;
+
+            rect {
+                fill: var(--blue)
+            }
+            
+            circle {
+                fill: var(--light-blue)
+            }
+
+            &.yellow {
+                fill: yellow;
+            }
+        }
     }
 }

@@ -2,11 +2,21 @@
     box-sizing: border-box;
 }
 
-html, body {
+* {
     margin: 0;
     padding: 0;
 }
 
+
+html, body, #react-root {
+    height: 100%;
+    
+}
+
 #react-root {
-    background-color: aliceblue;
+    background-color: lightgray;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
 }

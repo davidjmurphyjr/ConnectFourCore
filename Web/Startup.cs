@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -18,6 +19,7 @@ namespace Web
         {
             services.AddSignalR();
             services.AddMvc();
+            services.AddSingleton<IMoveRepository, MoveRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

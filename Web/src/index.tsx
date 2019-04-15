@@ -3,7 +3,7 @@ import * as signalR from "@aspnet/signalr";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { Board as Hello } from "./Board";
+import {Board as Board} from "./Board";
 
 var re = /\[([a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12})\]/i;
 function extractGuid(value) {    
@@ -27,9 +27,9 @@ function extractGuid(value) {
             .withUrl("/hub")
             .build();
 
-        connection.on("gameCreated", (board: any) => {
+        connection.on("gameCreated", (gamId: string, game: any) => {
             ReactDOM.render(
-                <Hello board={board} />,
+                <Board board={game.board} />,
                 document.getElementById("react-root")
             );
         });
