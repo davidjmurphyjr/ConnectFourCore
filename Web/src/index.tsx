@@ -5,41 +5,43 @@ import * as ReactDOM from "react-dom";
 
 import {Board as Board} from "./Board";
 
-var re = /\[([a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12})\]/i;
-function extractGuid(value) {    
-
-    // the RegEx will match the first occurrence of the pattern
-    var match = re.exec(value);
-
-    // result is an array containing:
-    // [0] the entire string that was matched by our RegEx
-    // [1] the first (only) group within our match, specified by the
-    // () within our pattern, which contains the GUID value
-
-    return match ? match[1] : null;
-}
-
 (async () => {
     try {
         const username = new Date().getTime();
+        const pathname = window.location.pathname;
+        const gameId = pathname.substr(1);
 
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/hub")
             .build();
+        
+        const makeMove = async (columnNumber) => {
+            await connection.send("makeMove", gameId, "fooo", columnNumber);
+            connection.send("getGameState", gameId)
+        };
 
-        connection.on("gameCreated", (gamId: string, game: any) => {
+        connection.on("gameCreated", (gameId: string, game: any) => {
+            history.pushState(null, null, gameId);
             ReactDOM.render(
-                <Board board={game.board} />,
+                <Board board={game.board} makeMove={makeMove} />,
                 document.getElementById("react-root")
             );
         });
 
-        connection.on("gameCreated", (username: string, gameId: string) => {
+        connection.on("GetGameStateResponse", (gameId: string, game: any) => {
             history.pushState(null, null, gameId);
+            ReactDOM.render(
+                <Board board={game.board} makeMove={makeMove} />,
+                document.getElementById("react-root")
+            );
         });
 
         await connection.start();
-        connection.send("newGame", username, "fooo")
+        if (pathname === "/") {
+            connection.send("newGame", username, "fooo")
+        } else {
+            connection.send("getGameState", gameId)
+        }
        
     } catch (e) {
         document.write(e)

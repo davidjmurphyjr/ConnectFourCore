@@ -6,7 +6,7 @@ namespace Core
 {
     public class Game
     {
-        private readonly IEnumerable<Move> _moves = new List<Move>();
+        private readonly List<Move> _moves = new List<Move>();
         private Token TokenToDrop => _moves.Count() % 2 == 0 ? Token.Yellow : Token.Red;
         public int PendingMoveNumber => _moves.Count() + 1;
         public Board Board { get; } = new Board();
@@ -35,6 +35,7 @@ namespace Core
             {
                 throw new ArgumentException("invalid move");
             }
+            _moves.Add(move);
         }
     }
 }

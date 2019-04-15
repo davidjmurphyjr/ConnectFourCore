@@ -46,7 +46,15 @@
             }
 
             &.yellow {
-                fill: yellow;
+                circle {
+                    fill: yellow;
+                }
+            }
+
+            &.red {
+                circle {
+                    fill: red;
+                }
             }
         }
     }

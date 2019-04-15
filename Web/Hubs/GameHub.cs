@@ -21,6 +21,13 @@ namespace Web.Hubs
             await Clients.All.SendAsync("gameCreated", gameId, game);
         }
         
+        public async Task GetGameState(Guid gameId)
+        {
+            var moves = _moveRepository.GetAll(gameId);
+            var game = Game.Create(moves);
+            await Clients.All.SendAsync("GetGameStateResponse", gameId, game);
+        }
+        
         public async Task MakeMove(Guid gameId, string username, int columnNumber)
         {
             var moves = _moveRepository.GetAll(gameId);
@@ -37,7 +44,6 @@ namespace Web.Hubs
             {
                 _moveRepository.Add(move);
             }
-            await Clients.All.SendAsync("updateGameState", game);
         }
     }
     
