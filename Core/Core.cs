@@ -2,7 +2,7 @@
 {
     public enum Token
     {
-        Yellow = 0,
-        Red = 1
+        Red = 0,
+        Yellow = 1
     }
 }

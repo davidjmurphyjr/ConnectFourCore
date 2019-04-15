@@ -5,19 +5,18 @@ import * as ReactDOM from "react-dom";
 
 import {Board as Board} from "./Board";
 
+
 (async () => {
     try {
-        const username = new Date().getTime();
-        const pathname = window.location.pathname;
-        const gameId = pathname.substr(1);
 
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/hub")
             .build();
         
         const makeMove = async (columnNumber) => {
-            await connection.send("makeMove", gameId, "fooo", columnNumber);
-            connection.send("getGameState", gameId)
+            const gameId = window.location.pathname.substr(1);
+            await connection.send("makeMove", window.location.pathname.substr(1), "fooo", columnNumber);
+            await connection.send("getGameState", gameId)
         };
 
         connection.on("gameCreated", (gameId: string, game: any) => {
@@ -37,10 +36,11 @@ import {Board as Board} from "./Board";
         });
 
         await connection.start();
-        if (pathname === "/") {
-            connection.send("newGame", username, "fooo")
+        const gameId =  window.location.pathname.substr(1);
+        if (gameId === "") {
+            await connection.send("newGame")
         } else {
-            connection.send("getGameState", gameId)
+            await connection.send("getGameState", gameId)
         }
        
     } catch (e) {

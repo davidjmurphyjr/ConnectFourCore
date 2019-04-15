@@ -6,13 +6,13 @@ namespace Core
 {
     public class Game
     {
-        private readonly List<Move> _moves = new List<Move>();
-        private Token TokenToDrop => _moves.Count() % 2 == 0 ? Token.Yellow : Token.Red;
-        public int PendingMoveNumber => _moves.Count() + 1;
+        private readonly List<int> _moves = new List<int>();
+        private Token TokenToDrop => _moves.Count % 2 == 0 ? Token.Red : Token.Yellow;
+        public int PendingMoveNumber => _moves.Count + 1;
         public Board Board { get; } = new Board();
         public Token? Winner { get; private set; }
 
-        public static Game Create(IEnumerable<Move> moves)
+        public static Game Create(IEnumerable<int> moves)
         {
             var game = new Game();
             foreach (var move in moves)
@@ -22,20 +22,24 @@ namespace Core
             return game;
         }
 
-        public bool CanMakeMove(Move move)
+        public bool CanMakeMove(int columnNumber)
         {
-            var rowNumber =  Board.Column(move.ColumnNumber).Drop(this.TokenToDrop);
+            var rowNumber =  Board.Column(columnNumber).Drop(TokenToDrop);
             return rowNumber != null;
         }
 
-        private void MakeMove(Move move)
+        public void MakeMove(int columnNumber)
         {
-            var rowNumber =  Board.Column(move.ColumnNumber).Drop(this.TokenToDrop);
+            var rowNumber =  Board.Column(columnNumber).Drop(TokenToDrop);
             if (rowNumber == null)
             {
-                throw new ArgumentException("invalid move");
+                throw new ArgumentException("Invalid move");
             }
-            _moves.Add(move);
+            if (Board.HasConnectionAt(columnNumber, rowNumber.Value))
+            {
+                Winner = TokenToDrop;
+            }
+            _moves.Add(columnNumber);
         }
     }
 }

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace CoreApp
+namespace Web
 {
     public class DefaultController : Controller
     {

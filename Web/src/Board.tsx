@@ -20,7 +20,7 @@ export class Board extends React.Component<BoardProps, {}> {
                                  xmlns="http://www.w3.org/2000/svg">
                                 {tokenCircle}
                             </svg>
-                            {column.tokens.map(token => {
+                            {column.tokens.reverse().map(token => {
                                 let className = "space";
                                 if(token === 0) {
                                     className = className + " yellow"

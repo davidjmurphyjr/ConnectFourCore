@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Core;
 using Microsoft.AspNetCore.SignalR;
@@ -14,7 +15,7 @@ namespace Web.Hubs
             _moveRepository = moveRepository;
         }
 
-        public async Task NewGame(string username, string message)
+        public async Task NewGame()
         {
             var gameId = Guid.NewGuid();
             var game = new Game();
@@ -23,15 +24,18 @@ namespace Web.Hubs
         
         public async Task GetGameState(Guid gameId)
         {
-            var moves = _moveRepository.GetAll(gameId);
+            var moves = _moveRepository.GetAll(gameId).OrderBy(m => m.MoveNumber).Select(m => m.ColumnNumber);
             var game = Game.Create(moves);
             await Clients.All.SendAsync("GetGameStateResponse", gameId, game);
         }
         
-        public async Task MakeMove(Guid gameId, string username, int columnNumber)
+        public void  MakeMove(Guid gameId, string username, int columnNumber)
         {
-            var moves = _moveRepository.GetAll(gameId);
+            var moves = _moveRepository.GetAll(gameId).OrderBy(m => m.MoveNumber).Select(m => m.ColumnNumber);
             var game = Game.Create(moves);
+            
+            var canMakeMove = game.CanMakeMove(columnNumber);
+            if (!canMakeMove) return;
             var move = new Move
             {
                 Username = username,
@@ -39,12 +43,7 @@ namespace Web.Hubs
                 MoveNumber = game.PendingMoveNumber,
                 ColumnNumber = columnNumber
             };
-            var canMakeMove = game.CanMakeMove(move);
-            if (canMakeMove)
-            {
-                _moveRepository.Add(move);
-            }
+            _moveRepository.Add(move);
         }
     }
-    
 }

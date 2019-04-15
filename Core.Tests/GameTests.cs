@@ -9,114 +9,96 @@ namespace Core.Tests
         [Fact]
         public void MakeMove()
         {
-            var game = new GameBuilder();
-            game.Create(0, Token.Yellow);
+            var game = new Game();
+            game.MakeMove(0);
             Assert.True(true);
         }
 
         [Fact]
         public void Test_simple_win_vertical()
         {
-            var game = new GameBuilder();
-            game.Create(0, Token.Yellow);
-            game.Create(1, Token.Red);
-            game.Create(0, Token.Yellow);
-            game.Create(1, Token.Red);
-            game.Create(0, Token.Yellow);
-            game.Create(1, Token.Red);
+            var game = new Game();
+            game.MakeMove(0);
+            game.MakeMove(1);
+            game.MakeMove(0);
+            game.MakeMove(1);
+            game.MakeMove(0);
+            game.MakeMove(1);
             Assert.Null(game.Winner);
-            game.Create(0, Token.Yellow);
-            Assert.True(game.Winner == Token.Yellow);
+            game.MakeMove(0);
+            Assert.True(game.Winner == Token.Red);
         }
 
         [Fact]
         public void Test_simple_win_horizontal()
         {
-            var game = new GameBuilder();
-            game.Create(0, Token.Yellow);
-            game.Create(0, Token.Red);
-            game.Create(1, Token.Yellow);
-            game.Create(1, Token.Red);
-            game.Create(2, Token.Yellow);
-            game.Create(2, Token.Red);
+            var game = new Game();
+            game.MakeMove(0);
+            game.MakeMove(0);
+            game.MakeMove(1);
+            game.MakeMove(1);
+            game.MakeMove(2);
+            game.MakeMove(2);
 
             Assert.Null(game.Winner);
-            game.Create(3, Token.Yellow);
-            Assert.True(game.Winner == Token.Yellow);
+            game.MakeMove(3);
+            Assert.True(game.Winner == Token.Red);
         }
 
         [Fact]
         public void Test_simple_win_horizontal_on_the_right()
         {
-            var game = new GameBuilder();
-            game.Create(6, Token.Yellow);
-            game.Create(6, Token.Red);
-            game.Create(5, Token.Yellow);
-            game.Create(5, Token.Red);
-            game.Create(4, Token.Yellow);
-            game.Create(4, Token.Red);
+            var game = new Game();
+            game.MakeMove(6);
+            game.MakeMove(6);
+            game.MakeMove(5);
+            game.MakeMove(5);
+            game.MakeMove(4);
+            game.MakeMove(4);
 
             Assert.Null(game.Winner);
-            game.Create(3, Token.Yellow);
-            Assert.True(game.Winner == Token.Yellow);
+            game.MakeMove(3);
+            Assert.True(game.Winner == Token.Red);
         }
 
         [Fact]
         public void Test_simple_win_diagonal_up()
         {
-            var game = new GameBuilder();
-            game.Create(0, Token.Yellow);
-            game.Create(1, Token.Red);
-            game.Create(1, Token.Yellow);
-            game.Create(2, Token.Red);
-            game.Create(2, Token.Yellow);
-            game.Create(3, Token.Red);
-            game.Create(2, Token.Yellow);
-            game.Create(3, Token.Red);
-            game.Create(3, Token.Yellow);
-            game.Create(0, Token.Red);
+            var game = new Game();
+            game.MakeMove(0);
+            game.MakeMove(1);
+            game.MakeMove(1);
+            game.MakeMove(2);
+            game.MakeMove(2);
+            game.MakeMove(3);
+            game.MakeMove(2);
+            game.MakeMove(3);
+            game.MakeMove(3);
+            game.MakeMove(0);
 
             Assert.Null(game.Winner);
-            game.Create(3, Token.Yellow);
-            Assert.True(game.Winner == Token.Yellow);
+            game.MakeMove(3);
+            Assert.True(game.Winner == Token.Red);
         }
 
         [Fact]
         public void Test_simple_win_diagonal_down()
         {
-            var game = new GameBuilder();
-            game.Create(6, Token.Yellow);
-            game.Create(5, Token.Red);
-            game.Create(5, Token.Yellow);
-            game.Create(4, Token.Red);
-            game.Create(4, Token.Yellow);
-            game.Create(3, Token.Red);
-            game.Create(4, Token.Yellow);
-            game.Create(3, Token.Red);
-            game.Create(3, Token.Yellow);
-            game.Create(0, Token.Red);
+            var game = new Game();
+            game.MakeMove(6);
+            game.MakeMove(5);
+            game.MakeMove(5);
+            game.MakeMove(4);
+            game.MakeMove(4);
+            game.MakeMove(3);
+            game.MakeMove(4);
+            game.MakeMove(3);
+            game.MakeMove(3);
+            game.MakeMove(0);
 
             Assert.Null(game.Winner);
-            game.Create(3, Token.Yellow);
-            Assert.True(game.Winner == Token.Yellow);
-        }
-    }
-
-    public class GameBuilder
-    {
-        private readonly List<Move> _moves = new List<Move>();
-        private Guid _gameId = Guid.NewGuid();
-        public Token? Winner => Game.Create(_moves).Winner;
-
-        public void Create(int columnNumber, Token token)
-        {
-            _moves.Add(new Move
-            {
-                GameId = _gameId,
-                MoveNumber = _moves.Count,
-                ColumnNumber = columnNumber,
-                Username = "Tester"
-            });
+            game.MakeMove(3);
+            Assert.True(game.Winner == Token.Red);
         }
     }
 }
