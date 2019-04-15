@@ -23,13 +23,23 @@
         flex-direction: column;
         justify-content: flex-end;
 
-        .staging {
-            fill: transparent;
+        .pre-drop-token {
+            visibility: hidden;
+            stroke: black;
+            stroke-width: 2;            
         }
         
         &:hover {
-            .staging {
-                fill: black;
+            .pre-drop-token {
+                visibility: initial;
+                
+                &.yellow {
+                    fill: yellow;
+                }
+
+                &.red {
+                    fill: red;
+                }
             }
         }
 

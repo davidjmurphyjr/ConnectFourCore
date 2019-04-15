@@ -15,13 +15,6 @@ namespace Web.Hubs
             _moveRepository = moveRepository;
         }
 
-        public async Task NewGame()
-        {
-            var gameId = Guid.NewGuid();
-            var game = new Game();
-            await Clients.All.SendAsync("gameCreated", gameId, game);
-        }
-        
         public async Task GetGameState(Guid gameId)
         {
             var moves = _moveRepository.GetAll(gameId).OrderBy(m => m.MoveNumber).Select(m => m.ColumnNumber);

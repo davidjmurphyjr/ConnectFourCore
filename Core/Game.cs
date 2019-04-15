@@ -7,7 +7,7 @@ namespace Core
     public class Game
     {
         private readonly List<int> _moves = new List<int>();
-        private Token TokenToDrop => _moves.Count % 2 == 0 ? Token.Red : Token.Yellow;
+        public Token TokenToDrop => _moves.Count % 2 == 0 ? Token.Red : Token.Yellow;
         public int PendingMoveNumber => _moves.Count + 1;
         public Board Board { get; } = new Board();
         public Token? Winner { get; private set; }
