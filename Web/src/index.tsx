@@ -33,7 +33,8 @@ import {Board as Board} from "./Board";
 
         await connection.start();
         let gameId =  window.location.pathname.substr(1);
-        if (gameId === "") {
+        const uuidRegEx = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+        if (!uuidRegEx.test(gameId)) {
             gameId = uuidv4();
             history.pushState(null, null, gameId);
         }
