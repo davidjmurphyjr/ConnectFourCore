@@ -9,12 +9,9 @@ namespace Web.Hubs
     public class GameHub : Hub
     {
         private readonly IGameService _gameService;
-        private readonly IMoveRepository _moveRepository;
 
-
-        public GameHub(IMoveRepository moveRepository, IGameService gameService)
+        public GameHub(IGameService gameService)
         {
-            _moveRepository = moveRepository;
             _gameService = gameService;
         }
 

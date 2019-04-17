@@ -10,7 +10,8 @@ namespace Core
         public const int NumberOfColumns = 7;
         public Token? Winner { get; set; }
         public int NumberOfMovesMade { get; set; }
-        public readonly IEnumerable<Space>[] Columns = Enumerable.Range(0, NumberOfColumns).Select(columnNUmber =>
-            Enumerable.Range(0, NumberOfRows).Select(rowNumber => new Space(rowNumber)).ToList()).ToArray();
+        public  Token? TokenToDrop { get; set; }
+
+        public readonly Token?[][] Columns = Enumerable.Range(0, NumberOfColumns).Select(columnNUmber => new Token?[NumberOfRows]).ToArray();
     }
 }

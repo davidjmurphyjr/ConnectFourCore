@@ -12,13 +12,13 @@ namespace Core.Tests
         {
             var gameService = new GameService(new MoveRepository());
             var gameId = Guid.NewGuid();
-            Assert.Null(gameService.GetGameState(gameId).Columns[0].First(s => s.RowNumber == 0).Token);
+            Assert.Null(gameService.GetGameState(gameId).Columns[0][0]);
             gameService.MakeMove(gameId, 0);
-            Assert.Equal(Token.Red, gameService.GetGameState(gameId).Columns[0].First(s => s.RowNumber == 0).Token);
+            Assert.Equal(Token.Red, gameService.GetGameState(gameId).Columns[0][0]);
         }
 
         [Fact]
-        public void Test_simple_win_vertical()
+        public void VerticalWin()
         {
             var gameService = new GameService(new MoveRepository());
             var gameId = Guid.NewGuid();
@@ -35,7 +35,7 @@ namespace Core.Tests
         }
 
         [Fact]
-        public void Test_simple_win_horizontal()
+        public void HorizontalWin()
         {
             var gameService = new GameService(new MoveRepository());
             var gameId = Guid.NewGuid();
@@ -52,7 +52,7 @@ namespace Core.Tests
         }
 
         [Fact]
-        public void Test_simple_win_horizontal_on_the_right()
+        public void HorizontalOnTheRightWin()
         {
             var gameService = new GameService(new MoveRepository());
             var gameId = Guid.NewGuid();
@@ -69,7 +69,7 @@ namespace Core.Tests
         }
 
         [Fact]
-        public void Test_simple_win_diagonal_up()
+        public void DiagonalUpWin()
         {
             var gameService = new GameService(new MoveRepository());
             var gameId = Guid.NewGuid();
@@ -90,7 +90,7 @@ namespace Core.Tests
         }
 
         [Fact]
-        public void Test_simple_win_diagonal_down()
+        public void DiagonalDownWin()
         {
             var gameService = new GameService(new MoveRepository());
             var gameId = Guid.NewGuid();

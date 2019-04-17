@@ -23,21 +23,22 @@
         flex-direction: column;
         justify-content: flex-end;
 
-        .pre-drop-token {
+        .token-to-drop {
             visibility: hidden;
             stroke: black;
             stroke-width: 2;            
         }
         
         &:hover {
-            .pre-drop-token {
-                visibility: initial;
-                
+            .token-to-drop {
+
                 &.yellow {
+                    visibility: initial;
                     fill: yellow;
                 }
 
                 &.red {
+                    visibility: initial;
                     fill: red;
                 }
             }
