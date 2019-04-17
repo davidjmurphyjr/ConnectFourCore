@@ -1,6 +1,6 @@
 namespace Core
 {
-    public enum Orientation
+    public enum SearchPattern
     {
         Horizontal,
         Vertical,

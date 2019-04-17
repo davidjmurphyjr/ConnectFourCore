@@ -20,10 +20,10 @@ export class Board extends React.Component<BoardProps, {}> {
     };
     
     render() {
-        const {board, tokenToDrop} = this.props.game;
+        const {columns, tokenToDrop} = this.props.game;
         return (
             <div className="board">
-                {board.map((column, columnNumber) => {
+                {columns.map((column, columnNumber) => {
                     const tokenCircle = <circle cx="50" cy="50" r="45"/>;
                     return (
                         <div className="column" onClick={async () => await this.props.makeMove(columnNumber)}>
@@ -31,9 +31,9 @@ export class Board extends React.Component<BoardProps, {}> {
                                  xmlns="http://www.w3.org/2000/svg">
                                 {tokenCircle}
                             </svg>
-                            {column.reverse().map(token => {
+                            {column.reverse().map(space => {
                                 return (
-                                    <svg className={this.appendTokenColor("space", token)} viewBox="0 0 100 100" version="1.1"
+                                    <svg className={this.appendTokenColor("space", space.token)} viewBox="0 0 100 100" version="1.1"
                                          xmlns="http://www.w3.org/2000/svg">
                                         <rect x="0" y="0" width="100" height="100"/>
                                         {tokenCircle}

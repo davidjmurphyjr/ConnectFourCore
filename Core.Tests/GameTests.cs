@@ -12,9 +12,9 @@ namespace Core.Tests
         {
             var gameService = new GameService(new MoveRepository());
             var gameId = Guid.NewGuid();
-            Assert.Null(gameService.GetGameState(gameId).Spaces.First(s => s.ColumnNumber == 0 && s.RowNumber == 0).Token);
+            Assert.Null(gameService.GetGameState(gameId).Columns[0].First(s => s.RowNumber == 0).Token);
             gameService.MakeMove(gameId, 0);
-            Assert.Equal(Token.Red, gameService.GetGameState(gameId).Spaces.First(s => s.ColumnNumber == 0 && s.RowNumber == 0).Token);
+            Assert.Equal(Token.Red, gameService.GetGameState(gameId).Columns[0].First(s => s.RowNumber == 0).Token);
         }
 
         [Fact]

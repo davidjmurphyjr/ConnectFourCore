@@ -10,23 +10,7 @@ namespace Core
         public const int NumberOfColumns = 7;
         public Token? Winner { get; set; }
         public int NumberOfMovesMade { get; set; }
-
-        public readonly IEnumerable<Space> Spaces = Enumerable.Range(0, NumberOfRows).SelectMany(rowNumber =>
-            Enumerable.Range(0, NumberOfColumns).Select(columnNumber => new Space(rowNumber, columnNumber))).ToList();
-
-        public Token?[][] Board {
-            get {
-                var board = new Token?[NumberOfColumns][];
-                for (var columnNUmber = 0; columnNUmber < NumberOfColumns; columnNUmber++)
-                {
-                    board[columnNUmber] = Spaces
-                        .Where(s => s.ColumnNumber == columnNUmber)
-                        .OrderBy(s => s.RowNumber)
-                        .Select(s => s.Token).ToArray();
-                }
-
-                return board;
-            }
-        }
+        public readonly IEnumerable<Space>[] Columns = Enumerable.Range(0, NumberOfColumns).Select(columnNUmber =>
+            Enumerable.Range(0, NumberOfRows).Select(rowNumber => new Space(rowNumber)).ToList()).ToArray();
     }
 }

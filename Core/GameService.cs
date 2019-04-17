@@ -3,6 +3,11 @@ using System.Linq;
 
 namespace Core
 {
+    public interface IGameService
+    {
+        void MakeMove(Guid gameId, int columnNumber);
+        GameState GetGameState(Guid gameId);
+    }
     public class GameService : IGameService
     {
         private readonly IMoveRepository _moveRepository;
@@ -12,14 +17,15 @@ namespace Core
             _moveRepository = moveRepository;
         }
 
-        public void  MakeMove(Guid gameId, int columnNumber)
+        public void MakeMove(Guid gameId, int columnNumber)
         {
-            var gameState =  GetGameState(gameId);
+            var gameState = GetGameState(gameId);
             var canMakeMove = CanMakeMove(gameState, columnNumber);
             if (!canMakeMove)
             {
                 return;
             }
+
             var move = new Move
             {
                 GameId = gameId,
@@ -29,10 +35,9 @@ namespace Core
             _moveRepository.Add(move);
         }
 
-        private bool CanMakeMove(GameState gameState, int moveColumnNumber)
+        private bool CanMakeMove(GameState gameState, int columnNumber)
         {
-            var anyEmptySpacesInColumn = gameState.Spaces
-                .Where(s => s.ColumnNumber == moveColumnNumber)
+            var anyEmptySpacesInColumn = gameState.Columns[columnNumber]
                 .OrderBy(s => s.RowNumber)
                 .Any(s => s.Token == null);
             return anyEmptySpacesInColumn;
@@ -44,14 +49,14 @@ namespace Core
             var gameState = new GameState();
             foreach (var move in moves)
             {
-                var firstEmptySpaceInColumn = gameState.Spaces
-                    .Where(s => s.ColumnNumber == move.ColumnNumber)
+                var column = gameState.Columns[move.ColumnNumber];
+                var firstEmpty = column
                     .OrderBy(s => s.RowNumber)
                     .First(s => s.Token == null);
                 var tokenToDrop = move.MoveNumber % 2 == 0 ? Token.Red : Token.Yellow;
-                firstEmptySpaceInColumn.Token = tokenToDrop;
-                
-                var hasConnection = HasConnectionAt(gameState, firstEmptySpaceInColumn.ColumnNumber, firstEmptySpaceInColumn.RowNumber);
+                firstEmpty.Token = tokenToDrop;
+
+                var hasConnection = HasConnectionAt(gameState, move.ColumnNumber, firstEmpty.RowNumber);
                 if (hasConnection)
                 {
                     gameState.Winner = tokenToDrop;
@@ -65,48 +70,48 @@ namespace Core
 
         public bool HasConnectionAt(GameState gameState, int columnNumber, int rowNumber)
         {
-            return CheckForConnectionAt(gameState, columnNumber, rowNumber, Orientation.Vertical)
-                   || CheckForConnectionAt(gameState, columnNumber, rowNumber, Orientation.Horizontal)
-                   || CheckForConnectionAt(gameState, columnNumber, rowNumber, Orientation.DiagonalUp)
-                   || CheckForConnectionAt(gameState, columnNumber, rowNumber, Orientation.DiagonalDown);
+            return CheckForConnectionAt(gameState, columnNumber, rowNumber, SearchPattern.Vertical)
+                   || CheckForConnectionAt(gameState, columnNumber, rowNumber, SearchPattern.Horizontal)
+                   || CheckForConnectionAt(gameState, columnNumber, rowNumber, SearchPattern.DiagonalUp)
+                   || CheckForConnectionAt(gameState, columnNumber, rowNumber, SearchPattern.DiagonalDown);
         }
 
-        private bool CheckForConnectionAt(GameState gameState, int columnNumber, int rowNumber, Orientation orientation)
+        private bool CheckForConnectionAt(GameState gameState, int columnNumber, int rowNumber, SearchPattern searchPattern)
         {
-            var sequenceColor = gameState.Spaces.First(c => c.ColumnNumber == columnNumber && c.RowNumber == rowNumber).Token;
+            var sequenceColor = gameState.Columns[columnNumber].First(c => c.RowNumber == rowNumber).Token;
             var connected = 1;
             var colToCheck = columnNumber;
             var rowToCheck = rowNumber;
             var rowDelta = 0;
             var colDelta = 0;
             var checkedReverseDirection = false;
-            switch (orientation)
+            switch (searchPattern)
             {
-                case Orientation.Horizontal:
+                case SearchPattern.Horizontal:
                     colDelta = 1;
                     break;
-                case Orientation.Vertical:
+                case SearchPattern.Vertical:
                     rowDelta = 1;
                     break;
-                case Orientation.DiagonalUp:
+                case SearchPattern.DiagonalUp:
                     rowDelta = 1;
                     colDelta = 1;
                     break;
-                case Orientation.DiagonalDown:
+                case SearchPattern.DiagonalDown:
                     rowDelta = -1;
                     colDelta = 1;
                     break;
             }
+
             while (connected < 4)
             {
                 rowToCheck = rowToCheck + rowDelta;
                 colToCheck = colToCheck + colDelta;
-
                 if (colToCheck < GameState.NumberOfColumns
                     && colToCheck >= 0
                     && rowToCheck < GameState.NumberOfRows
                     && rowToCheck >= 0
-                    && gameState.Spaces.First(s => s.RowNumber == rowToCheck && s.ColumnNumber == colToCheck).Token == sequenceColor)
+                    && gameState.Columns[colToCheck].First(s => s.RowNumber == rowToCheck).Token == sequenceColor)
                 {
                     connected++;
                 }
@@ -126,15 +131,8 @@ namespace Core
                     }
                 }
             }
+
             return connected == 4;
         }
-        
-      
-    }
-
-    public interface IGameService
-    {
-        void MakeMove(Guid gameId, int columnNumber);
-        GameState GetGameState(Guid gameId);
     }
 }
