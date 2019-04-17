@@ -20,6 +20,7 @@ namespace Web
             services.AddSignalR();
             services.AddMvc();
             services.AddSingleton<IMoveRepository, MoveRepository>();
+            services.AddSingleton<IGameService, GameService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

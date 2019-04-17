@@ -8,35 +8,25 @@ namespace Web.Hubs
 {
     public class GameHub : Hub
     {
+        private readonly IGameService _gameService;
         private readonly IMoveRepository _moveRepository;
 
-        public GameHub(IMoveRepository moveRepository)
+
+        public GameHub(IMoveRepository moveRepository, IGameService gameService)
         {
             _moveRepository = moveRepository;
+            _gameService = gameService;
         }
 
         public async Task GetGameState(Guid gameId)
         {
-            var moves = _moveRepository.GetAll(gameId).OrderBy(m => m.MoveNumber).Select(m => m.ColumnNumber);
-            var game = Game.Create(moves);
-            await Clients.All.SendAsync("GetGameStateResponse", gameId, game);
+            var gameState =  _gameService.GetGameState(gameId);
+            await Clients.All.SendAsync("GetGameStateResponse", gameState);
         }
         
-        public void  MakeMove(Guid gameId, string username, int columnNumber)
+        public void  MakeMove(Guid gameId, int columnNumber)
         {
-            var moves = _moveRepository.GetAll(gameId).OrderBy(m => m.MoveNumber).Select(m => m.ColumnNumber);
-            var game = Game.Create(moves);
-            
-            var canMakeMove = game.CanMakeMove(columnNumber);
-            if (!canMakeMove) return;
-            var move = new Move
-            {
-                Username = username,
-                GameId = gameId,
-                MoveNumber = game.PendingMoveNumber,
-                ColumnNumber = columnNumber
-            };
-            _moveRepository.Add(move);
+           _gameService.MakeMove(gameId, columnNumber);
         }
     }
 }

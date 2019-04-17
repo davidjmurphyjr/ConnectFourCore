@@ -28,7 +28,6 @@ namespace Core
     public class Move
     {
         public Guid GameId { get; set; }
-        public string Username { get; set; }
         public int MoveNumber { get; set; }
         public int ColumnNumber { get; set; }
 
@@ -37,7 +36,6 @@ namespace Core
             return new Move
             {
                 GameId = move.GameId,
-                Username = move.Username,
                 MoveNumber = move.MoveNumber,
                 ColumnNumber = move.ColumnNumber
             };

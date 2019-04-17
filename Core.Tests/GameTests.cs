@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Core.Tests
@@ -9,96 +10,104 @@ namespace Core.Tests
         [Fact]
         public void MakeMove()
         {
-            var game = new Game();
-            game.MakeMove(0);
-            Assert.True(true);
+            var gameService = new GameService(new MoveRepository());
+            var gameId = Guid.NewGuid();
+            Assert.Null(gameService.GetGameState(gameId).Spaces.First(s => s.ColumnNumber == 0 && s.RowNumber == 0).Token);
+            gameService.MakeMove(gameId, 0);
+            Assert.Equal(Token.Red, gameService.GetGameState(gameId).Spaces.First(s => s.ColumnNumber == 0 && s.RowNumber == 0).Token);
         }
 
         [Fact]
         public void Test_simple_win_vertical()
         {
-            var game = new Game();
-            game.MakeMove(0);
-            game.MakeMove(1);
-            game.MakeMove(0);
-            game.MakeMove(1);
-            game.MakeMove(0);
-            game.MakeMove(1);
-            Assert.Null(game.Winner);
-            game.MakeMove(0);
-            Assert.True(game.Winner == Token.Red);
+            var gameService = new GameService(new MoveRepository());
+            var gameId = Guid.NewGuid();
+            gameService.MakeMove(gameId, 0);
+            gameService.MakeMove(gameId, 1);
+            gameService.MakeMove(gameId, 0);
+            gameService.MakeMove(gameId, 1);
+            gameService.MakeMove(gameId, 0);
+            gameService.MakeMove(gameId, 1);
+
+            Assert.Null(gameService.GetGameState(gameId).Winner);
+            gameService.MakeMove(gameId, 0);
+            Assert.Equal(Token.Red, gameService.GetGameState(gameId).Winner);
         }
 
         [Fact]
         public void Test_simple_win_horizontal()
         {
-            var game = new Game();
-            game.MakeMove(0);
-            game.MakeMove(0);
-            game.MakeMove(1);
-            game.MakeMove(1);
-            game.MakeMove(2);
-            game.MakeMove(2);
+            var gameService = new GameService(new MoveRepository());
+            var gameId = Guid.NewGuid();
+            gameService.MakeMove(gameId, 0);
+            gameService.MakeMove(gameId, 0);
+            gameService.MakeMove(gameId, 1);
+            gameService.MakeMove(gameId, 1);
+            gameService.MakeMove(gameId, 2);
+            gameService.MakeMove(gameId, 2);
 
-            Assert.Null(game.Winner);
-            game.MakeMove(3);
-            Assert.True(game.Winner == Token.Red);
+            Assert.Null(gameService.GetGameState(gameId).Winner);
+            gameService.MakeMove(gameId, 3);
+            Assert.Equal(Token.Red, gameService.GetGameState(gameId).Winner);
         }
 
         [Fact]
         public void Test_simple_win_horizontal_on_the_right()
         {
-            var game = new Game();
-            game.MakeMove(6);
-            game.MakeMove(6);
-            game.MakeMove(5);
-            game.MakeMove(5);
-            game.MakeMove(4);
-            game.MakeMove(4);
+            var gameService = new GameService(new MoveRepository());
+            var gameId = Guid.NewGuid();
+            gameService.MakeMove(gameId, 6);
+            gameService.MakeMove(gameId, 6);
+            gameService.MakeMove(gameId, 5);
+            gameService.MakeMove(gameId, 5);
+            gameService.MakeMove(gameId, 4);
+            gameService.MakeMove(gameId, 4);
 
-            Assert.Null(game.Winner);
-            game.MakeMove(3);
-            Assert.True(game.Winner == Token.Red);
+            Assert.Null(gameService.GetGameState(gameId).Winner);
+            gameService.MakeMove(gameId, 3);
+            Assert.Equal(Token.Red, gameService.GetGameState(gameId).Winner);
         }
 
         [Fact]
         public void Test_simple_win_diagonal_up()
         {
-            var game = new Game();
-            game.MakeMove(0);
-            game.MakeMove(1);
-            game.MakeMove(1);
-            game.MakeMove(2);
-            game.MakeMove(2);
-            game.MakeMove(3);
-            game.MakeMove(2);
-            game.MakeMove(3);
-            game.MakeMove(3);
-            game.MakeMove(0);
+            var gameService = new GameService(new MoveRepository());
+            var gameId = Guid.NewGuid();
+            gameService.MakeMove(gameId, 0);
+            gameService.MakeMove(gameId, 1);
+            gameService.MakeMove(gameId, 1);
+            gameService.MakeMove(gameId, 2);
+            gameService.MakeMove(gameId, 2);
+            gameService.MakeMove(gameId, 3);
+            gameService.MakeMove(gameId, 2);
+            gameService.MakeMove(gameId, 3);
+            gameService.MakeMove(gameId, 3);
+            gameService.MakeMove(gameId, 0);
 
-            Assert.Null(game.Winner);
-            game.MakeMove(3);
-            Assert.True(game.Winner == Token.Red);
+            Assert.Null(gameService.GetGameState(gameId).Winner);
+            gameService.MakeMove(gameId, 3);
+            Assert.Equal(Token.Red, gameService.GetGameState(gameId).Winner);
         }
 
         [Fact]
         public void Test_simple_win_diagonal_down()
         {
-            var game = new Game();
-            game.MakeMove(6);
-            game.MakeMove(5);
-            game.MakeMove(5);
-            game.MakeMove(4);
-            game.MakeMove(4);
-            game.MakeMove(3);
-            game.MakeMove(4);
-            game.MakeMove(3);
-            game.MakeMove(3);
-            game.MakeMove(0);
+            var gameService = new GameService(new MoveRepository());
+            var gameId = Guid.NewGuid();
+            gameService.MakeMove(gameId, 6);
+            gameService.MakeMove(gameId, 5);
+            gameService.MakeMove(gameId, 5);
+            gameService.MakeMove(gameId, 4);
+            gameService.MakeMove(gameId, 4);
+            gameService.MakeMove(gameId, 3);
+            gameService.MakeMove(gameId, 4);
+            gameService.MakeMove(gameId, 3);
+            gameService.MakeMove(gameId, 3);
+            gameService.MakeMove(gameId, 0);
 
-            Assert.Null(game.Winner);
-            game.MakeMove(3);
-            Assert.True(game.Winner == Token.Red);
+            Assert.Null(gameService.GetGameState(gameId).Winner);
+            gameService.MakeMove(gameId, 3);
+            Assert.Equal(Token.Red, gameService.GetGameState(gameId).Winner);
         }
     }
 }

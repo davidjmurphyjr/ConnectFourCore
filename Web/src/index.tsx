@@ -19,12 +19,11 @@ import {Board as Board} from "./Board";
         
         const makeMove = async (columnNumber) => {
             const gameId = window.location.pathname.substr(1);
-            await connection.send("makeMove", window.location.pathname.substr(1), "fooo", columnNumber);
+            await connection.send("makeMove", window.location.pathname.substr(1), columnNumber);
             await getGameState(gameId);
         };
 
-        connection.on("GetGameStateResponse", (gameId: string, game: any) => {
-            history.pushState(null, null, gameId);
+        connection.on("GetGameStateResponse", (game: any) => {
             ReactDOM.render(
                 <Board game={game} makeMove={makeMove} />,
                 document.getElementById("react-root")
