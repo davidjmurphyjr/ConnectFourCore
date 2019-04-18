@@ -1,0 +1,30 @@
+.column {
+    display : flex;
+    flex-direction: column;
+    
+    .drop-space {
+        visibility: hidden;
+        stroke: black;
+        stroke-width: 2;     
+        
+        rect {
+            fill: transparent;
+            stroke: none;
+        }
+    }
+    
+    &:hover {
+        .drop-space {
+
+            &.yellow {
+                visibility: initial;
+                fill: var(--yellow);
+            }
+
+            &.red {
+                visibility: initial;
+                fill: var(--red);
+            }
+        }
+    }
+}

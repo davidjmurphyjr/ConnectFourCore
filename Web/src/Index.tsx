@@ -3,9 +3,14 @@ import * as signalR from "@aspnet/signalr";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import * as uuidv4  from "uuid/v4";
+import {Game} from "./Game";
 
-import {Board as Board} from "./Board";
-
+const GetGameIdFromLocation: () => string = () => {
+    const uuidRegEx = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+    const pathnameWithoutLeadingSlash = window.location.pathname.substr(1);
+    const patternMatch = uuidRegEx.test(pathnameWithoutLeadingSlash);
+    return patternMatch ? pathnameWithoutLeadingSlash : null;
+};
 
 (async () => {
     try {
@@ -23,17 +28,17 @@ import {Board as Board} from "./Board";
             await getGameState(gameId);
         };
 
-        connection.on("GetGameStateResponse", (game: any) => {
-            ReactDOM.render(
-                <Board game={game} makeMove={makeMove} />,
-                document.getElementById("react-root")
-            );
+        connection.on("GameStateAnnounce", (gameId: string, game: any) => {
+            const locationGameId = GetGameIdFromLocation();
+            if(gameId === locationGameId) {
+                const reactRootElement = document.getElementById("react-root");
+                ReactDOM.render( <Game game={game} makeMove={makeMove} />, reactRootElement);
+            }
         });
 
         await connection.start();
-        let gameId =  window.location.pathname.substr(1);
-        const uuidRegEx = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
-        if (!uuidRegEx.test(gameId)) {
+        let gameId =  GetGameIdFromLocation();
+        if (!gameId) {
             gameId = uuidv4();
             history.pushState(null, null, gameId);
         }

@@ -1,0 +1,33 @@
+.space {
+
+    @media (orientation: landscape) {
+        width: 11vh;
+    }
+
+    @media (orientation: portrait) {
+        width: 11vw;
+    }
+    
+    stroke: black;
+    stroke-width: 2;
+
+    rect {
+        fill: var(--blue)
+    }
+
+    circle {
+        fill: var(--light-blue)
+    }
+
+    &.yellow {
+        circle {
+            fill: var(--yellow);
+        }
+    }
+
+    &.red {
+        circle {
+            fill: var(--red);
+        }
+    }
+}

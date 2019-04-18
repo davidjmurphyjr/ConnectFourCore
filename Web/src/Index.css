@@ -1,0 +1,19 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body, #react-root {
+    height: 100%;
+}
+
+:root {
+    --blue: #007EFF;
+    --light-blue: #7bcdff;
+    --red: #ff1515;
+    --yellow: #fffb0d
+}

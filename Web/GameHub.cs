@@ -18,7 +18,7 @@ namespace Web.Hubs
         public async Task GetGameState(Guid gameId)
         {
             var gameState =  _gameService.GetGameState(gameId);
-            await Clients.All.SendAsync("GetGameStateResponse", gameState);
+            await Clients.All.SendAsync("GameStateAnnounce", gameId, gameState);
         }
         
         public void  MakeMove(Guid gameId, int columnNumber)
