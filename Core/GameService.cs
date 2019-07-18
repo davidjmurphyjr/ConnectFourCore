@@ -1,80 +1,67 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Core
 {
     public interface IGameService
     {
-        void MakeMove(Guid gameId, int columnNumber);
-        GameState GetGameState(Guid gameId);
+        GameState GetGameState(List<int> moves);
+        bool CanMakeMove(GameState gameState, int columnNumber);
     }
     public class GameService : IGameService
     {
-        private readonly IMoveRepository _moveRepository;
-
-        public GameService(IMoveRepository moveRepository)
+        public bool CanMakeMove(GameState gameState, int columnNumber)
         {
-            _moveRepository = moveRepository;
-        }
-
-        public void MakeMove(Guid gameId, int columnNumber)
-        {
-            var gameState = GetGameState(gameId);
             if (gameState.Winner.HasValue)
             {
-                return;
+                return false;
             }
 
             var moveColumnHasEmptySpace = gameState.Columns[columnNumber].Any(t => t == null);
             if (!moveColumnHasEmptySpace)
             {
-                return;
+                return false;
             }
 
-            var move = new Move
-            {
-                GameId = gameId,
-                MoveNumber = gameState.NumberOfMovesMade,
-                ColumnNumber = columnNumber
-            };
-            _moveRepository.Add(move);
+            return true;
         }
+        
+        public GameState GetGameState(List<int> moves)
+        {
+            var gameState = new GameState {TokenToDrop = Token.Red};
+            foreach (var columnNumber in moves)
+            {
+                var moveColumn = gameState.Columns[columnNumber];
+                var rowNumberOfFirstEmptySpace = Array.IndexOf(moveColumn, null);
+                var tokenToDrop = MoveNumberToToken(gameState.NumberOfMovesMade);
+                moveColumn[rowNumberOfFirstEmptySpace] = tokenToDrop;
+                gameState.NumberOfMovesMade++;
+                
+                if (moves.Count >= 7)
+                {
+                    var hasConnection = HasConnectionAt(gameState, columnNumber, rowNumberOfFirstEmptySpace);
+                    if (hasConnection)
+                    {
+                        gameState.TokenToDrop = null;
+                        gameState.Winner = tokenToDrop;
+                        return gameState;
+                    }
+                }
+                gameState.TokenToDrop = MoveNumberToToken(gameState.NumberOfMovesMade);
+            }
+
+            return gameState;
+        }
+
+
 
         private Token MoveNumberToToken(int moveNumber)
         {
             return moveNumber % 2 == 0 ? Token.Red : Token.Yellow;
         }
-
-        public GameState GetGameState(Guid gameId)
-        {
-            var moves = _moveRepository.GetAll(gameId).OrderBy(m => m.MoveNumber).ToList();
-            var gameState = new GameState
-            {
-                NumberOfMovesMade = moves.Count
-            };
-            foreach (var move in moves)
-            {
-                var moveColumn = gameState.Columns[move.ColumnNumber];
-                var rowNumberOfFirstEmptySpace = Array.IndexOf(moveColumn, null);
-                var tokenToDrop = MoveNumberToToken(move.MoveNumber);
-                moveColumn[rowNumberOfFirstEmptySpace] = tokenToDrop;
-
-                if (moves.Count >= 7)
-                {
-                    var hasConnection = HasConnectionAt(gameState, move.ColumnNumber, rowNumberOfFirstEmptySpace);
-                    if (hasConnection)
-                    {
-                        gameState.Winner = tokenToDrop;
-                        return gameState;
-                    }
-                }
-            }
-
-            gameState.TokenToDrop = MoveNumberToToken(moves.Count);
-            return gameState;
-        }
-
-        public bool HasConnectionAt(GameState gameState, int columnNumber, int rowNumber)
+        
+        private bool HasConnectionAt(GameState gameState, int columnNumber, int rowNumber)
         {
             return CheckForConnectionAt(gameState, columnNumber, rowNumber, SearchPattern.Vertical)
                    || CheckForConnectionAt(gameState, columnNumber, rowNumber, SearchPattern.Horizontal)
@@ -113,11 +100,7 @@ namespace Core
             {
                 rowToCheck = rowToCheck + rowDelta;
                 colToCheck = colToCheck + colDelta;
-                if (colToCheck < GameState.NumberOfColumns
-                    && colToCheck >= 0
-                    && rowToCheck < GameState.NumberOfRows
-                    && rowToCheck >= 0
-                    && gameState.Columns[colToCheck][rowToCheck] == sequenceColor)
+                if (gameState.Columns.ElementAtOrDefault(colToCheck)?.ElementAtOrDefault(rowToCheck) == sequenceColor)
                 {
                     connected++;
                 }

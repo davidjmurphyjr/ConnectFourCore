@@ -24,7 +24,7 @@ const GetGameIdFromLocation: () => string = () => {
         
         const makeMove = async (columnNumber) => {
             const gameId = window.location.pathname.substr(1);
-            await connection.send("makeMove", window.location.pathname.substr(1), columnNumber);
+            await connection.send("makeMove", GetGameIdFromLocation(), columnNumber);
             await getGameState(gameId);
         };
 

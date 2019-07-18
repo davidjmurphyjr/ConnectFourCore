@@ -2,7 +2,6 @@ import "./Column.css";
 import * as React from "react";
 import {Space} from "./Space";
 import classNames  from "classnames";
-import Token from "./Token";
 
 export interface ColumnProps { tokenToDrop: number, onClick: any, column: any }
 
