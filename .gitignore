@@ -4,3 +4,4 @@ obj
 wwwroot
 .idea
 ConnectFourCore.sln.DotSettings.user
+.DS_Store
